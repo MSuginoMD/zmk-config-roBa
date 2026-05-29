@@ -44,11 +44,6 @@
             bindings = <&mo 5>;
             key-positions = <6 7>;
         };
-
-        jap {
-            bindings = <&kp LANG1>;
-            key-positions = <41 40>;
-        };
     };
 
     macros {
