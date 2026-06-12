@@ -2,6 +2,25 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
+#include <input/processors.dtsi>
+
+// AML (auto mouse layer) を ZMK 本体の temp-layer 入力プロセッサで実装。
+// ドライバ内蔵の automouse-layer と違い、
+//  - require-prior-idle-ms: タイピング直後はボールが動いてもレイヤーを発動しない
+//  - マウスキー以外のキー押下で即座にレイヤー解除
+// により文字モードとの切り替え誤爆を防ぐ。
+&zip_temp_layer {
+    require-prior-idle-ms = <400>;
+    // レイヤーを解除しないキー位置:
+    //  7=SCRL_UP(I) 18=MB1(J) 19=SCRL_DOWN(K) 20=MB2(L) 31=MB3(,)
+    //  22=Shift 34=Alt 35=Ctrl 36=GUI (修飾キー+クリック用)
+    excluded-positions = <7 18 19 20 22 31 34 35 36>;
+};
+
+&trackball_listener {
+    // ボール操作でレイヤー4(MOUSE)を有効化、最終入力から600msで解除
+    input-processors = <&zip_temp_layer 4 600>;
+};
 
 &mt {
     flavor = "tap-preferred";
